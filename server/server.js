@@ -2,12 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-dotenv.config()
-const app = express()
+import AuthRoutes from "./routes/AuthRoutes.js";
 
-app.use(cors())
-app.use(express.json)
+dotenv.config();
+const app = express();
 
-const server = app.listen(process.env.PORT,()=>{
-    console.log("Server started at PORT", process.env.PORT)
-})
+app.use(cors());
+app.use(express.json());
+app.use("/api/auth", AuthRoutes);
+
+const server = app.listen(process.env.PORT, () => {
+  console.log("Server started at PORT", process.env.PORT);
+});
