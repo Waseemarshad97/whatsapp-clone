@@ -1,16 +1,20 @@
-import getPrismaInstance from "../utils/PrismaClient.js";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const checkUser = async (req, res, next) => {
   try {
     const { email } = req.body;
     console.log("--", email);
+
     if (!email) {
-      return res.json({ msg: "email is required", status: flase });
+      return res.json({ msg: "email is required", status: false });
     }
-    const prisma = getPrismaInstance();
-    const user = await prisma.User.findUnique({ where: { email } });
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
     if (!user) {
-      return res.json({ msg: "user not found", status: flase });
+      return res.json({ msg: "user not found", status: false });
     } else {
       return res.json({ msg: "user found", status: true, data: user });
     }
