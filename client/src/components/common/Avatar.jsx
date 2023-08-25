@@ -1,26 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaCamera } from "react-icons/fa";
 import ContextMenu from "./ContextMenu";
+import PhotoPicker from "./PhotoPicker";
+import PhotoLibrary from "./PhotoLibrary";
 
-function Avatar({ type, image }) {
+function Avatar({ type, image, setImage }) {
   const [hover, setHover] = useState();
   const [isContextMenuVisible, setIscontextMenuVisible] = useState();
   const [contextMenuCoordinates, setContextMenuCoordinates] = useState({
     x: 0,
     y: 0,
   });
+  const [grabPhoto, setGrabPhoto] = useState();
+  const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
+
+  const photoPickerChange = async (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    const data = document.createElement("img");
+    reader.onload = function (event) {
+      data.src = event.target.result;
+      data.setAttribute("data-src", event.target.result);
+    };
+    reader.readAsDataURL(file);
+    setTimeout(() => {
+      console.log(data.src);
+      setImage(data.src);
+    }, 100);
+  };
+
   const showContextMenu = (e) => {
     e.preventDefault();
     setIscontextMenuVisible(true);
     setContextMenuCoordinates({ x: e.pageX, y: e.pageY });
   };
-
+  useEffect(() => {
+    if (grabPhoto) {
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (e) => {
+        setTimeout(() => {
+          setGrabPhoto(false);
+        }, 1000);
+      };
+    }
+  }, [grabPhoto]);
   const contextMenuoptions = [
     { name: "Take Photo", callback: () => {} },
-    { name: "Choose from library", callback: () => {} },
-    { name: "Upload Photo", callback: () => {} },
-    { name: "Remove Photo", callback: () => {} },
+    {
+      name: "Choose from library",
+      callback: () => {
+        setShowPhotoLibrary(true);
+      },
+    },
+    {
+      name: "Upload Photo",
+      callback: () => {
+        console.log("clicked");
+        setGrabPhoto(true);
+      },
+    },
+    {
+      name: "Remove Photo",
+      callback: () => {
+        setImage("/default_avatar.png");
+      },
+    },
   ];
 
   return (
@@ -69,6 +115,13 @@ function Avatar({ type, image }) {
           setContextMenu={setIscontextMenuVisible}
         />
       )}
+      {showPhotoLibrary && (
+        <PhotoLibrary
+          setImage={setImage}
+          setShowPhotoLibrary={setShowPhotoLibrary}
+        />
+      )}
+      {grabPhoto && <PhotoPicker onchange={photoPickerChange} />}
     </>
   );
 }
