@@ -41,11 +41,39 @@ export const onBoardUser = async (req, res, next) => {
     return res.json({
       msg: "user created successfull",
       status: true,
-      data: user,
+      user,
     });
   } catch (e) {
     console.log("err", e);
 
     next(e);
+  }
+};
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        profilePicture: true,
+        about: true,
+      },
+    });
+    console.log("========res==========", users);
+    const userGroutByInitialLetter = {};
+    users.forEach((user) => {
+      const initialLetter = user.name.charAt(0).toUpperCase();
+      if (!userGroutByInitialLetter[initialLetter]) {
+        userGroutByInitialLetter[initialLetter] = [];
+      }
+      userGroutByInitialLetter[initialLetter].push(user);
+    });
+    return res.status(200).send({ users: userGroutByInitialLetter });
+  } catch (err) {
+    console.log(err);
+    next(err);
   }
 };

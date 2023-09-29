@@ -15,10 +15,10 @@ function onboarding() {
   const [image, setImage] = useState("/default_avatar.png");
   const router = useRouter();
 
-  useEffect(() => {
-    if (!newUser && !userInfo?.email) router.push("/login");
-    else if (!newUser && userInfo?.email) router.push("/");
-  }, [newUser, userInfo, router]);
+  // useEffect(() => {
+  //   if (!newUser && !userInfo?.email) router.push("/login");
+  //   else if (!newUser && userInfo?.email) router.push("/");
+  // }, [newUser, userInfo, router]);
 
   const onboardUserHandler = async () => {
     if (validateDetails()) {
@@ -27,14 +27,11 @@ function onboarding() {
         let userData = { email, name, about, image };
         const { data } = await axios.post(ONBOARD_USER_ROUTE, userData);
         if (data.status) {
-          dispatch({
-            type: reducercases.SET_NEW_USER,
-            newUser: flase,
-          });
+          dispatch({ type: reducercases.SET_NEW_USER, newUser: flase });
           dispatch({
             type: reducercases.SET_USER_INFO,
             userInfo: {
-              id: data.id,
+              id: data.user.id,
               name,
               email,
               profileImage: image,

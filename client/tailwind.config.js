@@ -8,6 +8,7 @@ module.exports = {
       },
     },
     colors: {
+      white: "#FFFFFF",
       secondary: "#8696a0",
       "teal-light": "#7ae3c3",
       "photopicker-overlay-background": "rgba(30,42,49,0.8)",
@@ -21,7 +22,7 @@ module.exports = {
       "icon-green": "#00a884",
       "search-input-container-background": "#111b21",
       "conversation-border": "rgba(134,150,160,0.15)",
-      "background-panel-background": "#b141a",
+      "conversation-panel-background": "rgb(4.3, 7.8, 10.2)",
       "background-default-hover": "#202c33",
       "incoming-background": "#202c33",
       "outgoing-background": "#005c4b",

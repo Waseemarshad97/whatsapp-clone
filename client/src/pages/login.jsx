@@ -18,25 +18,16 @@ function login() {
     const {
       user: { displayName: name, email, photoURL: profileImage },
     } = await signInWithPopup(firebaseAuth, provider);
+
     try {
       if (email) {
         const { data } = await axios.post(CHECK_USER_ROUTE, { email });
         if (!data.status) {
-          console.log(data);
-          dispatch({
-            type: reducercases.SET_NEW_USER,
-            newUser: true,
-          });
+          dispatch({ type: reducercases.SET_NEW_USER, newUser: true });
           dispatch({
             type: reducercases.SET_USER_INFO,
-            userInfo: {
-              name,
-              email,
-              profileImage,
-              status: "",
-            },
+            userInfo: { name, email, profileImage, status: "" },
           });
-
           router.push("/onboarding");
         } else {
           const {
@@ -45,16 +36,10 @@ function login() {
             email,
             profilePicture: profileImage,
             status,
-          } = data;
+          } = data.data;
           dispatch({
             type: reducercases.SET_USER_INFO,
-            userInfo: {
-              id,
-              name,
-              email,
-              profileImage,
-              status,
-            },
+            userInfo: { id, name, email, profileImage, status },
           });
           router.push("/");
         }
